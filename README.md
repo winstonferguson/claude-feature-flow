@@ -1,11 +1,31 @@
 # Feature flow for Claude Code
 
 Left alone, coding agents write PRs too big to review. With this flow, PRs
-went from 1,000+ lines to a few hundred, and I ship more. See it run: [the gate's replies to one feature](examples/hook-run.md).
+went from 1,000+ lines to a few hundred, and I ship more.
 
-A working setup for building features with Claude Code agents. One human
-maintainer, three agent roles, and hooks that keep the agents on the flow.
-It comes from a production Rails app, with the product details removed.
+**What it is:** a `.claude/` setup you copy into a Rails app. A person
+writes a GitHub issue and types a few commands. A coordinator session, a
+`builder` agent and a read-only `reviewer` agent take it to a draft PR in
+small, reviewed slices. A Ruby hook refuses anything off the flow, from
+editing before a flow starts to merging. It comes from a production Rails
+app, with the product details removed.
+
+**Try it:**
+
+- **Read a run (2 minutes):** [an example issue](examples/issue.md), then
+  [the hook's real replies while it is built](examples/hook-run.md).
+- **Run the hook yourself** (Ruby 3.2+ and git, no gems to install). Clone this repo,
+  then from its root:
+
+  ```bash
+  ruby examples/hook_run.rb
+  ```
+
+  ```bash
+  ruby .claude/hooks/flow_gate_test.rb
+  ```
+
+- **Use it in your app:** [seven steps](#use-it-in-your-rails-app).
 
 ## The flow
 
