@@ -48,6 +48,48 @@ Only the maintainer can type `start feature`, `start fix`, `approve spec`,
 `approve draft` and `stop flow`. They work because the hook reads them on
 `UserPromptSubmit`, which only a person's message fires.
 
+## Limits
+
+Short reports keep the maintainer's reading small. Code, inline code and
+file paths don't count towards word limits.
+
+| What | Limit |
+|---|---|
+| Blocking questions before the draft | 3, interaction first |
+| Acceptance criteria per issue | 10; past about 5, simplify or split |
+| Size budget per PR | about 400 changed lines of app and test code, or 5 criteria |
+| Builder's report | 150 words, at most five "Done" bullets |
+| Reviewer's report | 200 words, at most five findings, a three-line reply to the builder |
+| Other agent summaries | 200 words |
+| A message to the maintainer | 100 words: what's blocked or decided, then numbered one-line questions, each with a recommendation |
+| "Fix first" rounds | 2, then stop and ask |
+
+Going over the size budget blocks nothing. The coordinator simplifies until
+the change fits, or splits the extra part into a new issue, and tells the
+maintainer which it chose.
+
+## When the maintainer is called in
+
+Otherwise agents state their recommendation and carry on. They stop and ask
+the maintainer when:
+
+- the issue conflicts with an ADR, or there's a real design choice;
+- a block names no way forward, including a failed hook or protected files
+  that differ from `main`;
+- the reviewer returns `needs the maintainer`: more than 10 criteria, an
+  interaction that doesn't say what the user sees during it, a block the
+  builder worked around, or a decision or gap the issue doesn't settle;
+- two "fix first" rounds haven't reached "ready";
+- a review finding offers a choice, such as whether a constraint becomes a
+  criterion or is cut;
+- a builder proposes a change to a skill or rule.
+
+The maintainer also acts at fixed points: `start feature` or `start fix`,
+`approve spec` when a migration or ADR changes, trying the draft and typing
+`approve draft`, triaging `ai-agent` issues, and merging. If
+`SLACK_WEBHOOK_URL` is set, the Stop hook posts to Slack whenever Claude is
+waiting for a reply.
+
 ## What the hooks enforce
 
 `.claude/hooks/flow_gate.rb` is wired up in `.claude/settings.json`. It runs in
