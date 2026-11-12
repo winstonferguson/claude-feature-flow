@@ -1,0 +1,68 @@
+{
+  "permissions": {
+    "ask": [
+      "Bash(bin/rails db:drop*)",
+      "Bash(bin/rails db:reset*)",
+      "Bash(bin/rails db:purge*)",
+      "Bash(bin/rails db:schema:load*)",
+      "Bash(bin/rails db:migrate:reset*)",
+      "Bash(bin/rails db:truncate_all*)",
+      "Bash(bin/rails db:seed:replant*)"
+    ]
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ \"$CLAUDE_CODE_REMOTE\" != true ] || { cd \"$CLAUDE_PROJECT_DIR\" && git fetch --quiet origin main 2>/dev/null && git diff --quiet origin/main...HEAD -- .claude .github CLAUDE.md ':(exclude).claude/flow/ledgers' 2>/dev/null && git diff --quiet HEAD -- .claude .github CLAUDE.md ':(exclude).claude/flow/ledgers' 2>/dev/null && [ -z \"$(git ls-files --others --exclude-standard -- .claude .github CLAUDE.md ':(exclude).claude/flow/ledgers')\" ]; } || { echo 'Protected files changed. Tell the maintainer.' >&2; exit 2; }; ruby \"$CLAUDE_PROJECT_DIR/.claude/hooks/flow_gate.rb\""
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ \"$CLAUDE_CODE_REMOTE\" != true ] || { cd \"$CLAUDE_PROJECT_DIR\" && git diff --quiet origin/main...HEAD -- .claude .github CLAUDE.md ':(exclude).claude/flow/ledgers' 2>/dev/null && git diff --quiet HEAD -- .claude .github CLAUDE.md ':(exclude).claude/flow/ledgers' 2>/dev/null && [ -z \"$(git ls-files --others --exclude-standard -- .claude .github CLAUDE.md ':(exclude).claude/flow/ledgers')\" ]; } || { echo 'Protected files changed. Tell the maintainer.' >&2; exit 2; }; ruby \"$CLAUDE_PROJECT_DIR/.claude/hooks/flow_gate.rb\""
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit|NotebookEdit|Bash|Agent|Task|mcp__.*|.*[Mm]erge.*|.*[Gg]it[Hh]ub.*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ \"$CLAUDE_CODE_REMOTE\" != true ] || { cd \"$CLAUDE_PROJECT_DIR\" && git diff --quiet origin/main...HEAD -- .claude .github CLAUDE.md ':(exclude).claude/flow/ledgers' 2>/dev/null && git diff --quiet HEAD -- .claude .github CLAUDE.md ':(exclude).claude/flow/ledgers' 2>/dev/null && [ -z \"$(git ls-files --others --exclude-standard -- .claude .github CLAUDE.md ':(exclude).claude/flow/ledgers')\" ]; } || { echo 'Protected files changed. Tell the maintainer.' >&2; exit 2; }; ruby \"$CLAUDE_PROJECT_DIR/.claude/hooks/flow_gate.rb\" || { echo 'The flow hook failed to run, so this is blocked. Tell the maintainer.' >&2; exit 2; }"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Agent|Task",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ \"$CLAUDE_CODE_REMOTE\" != true ] || { cd \"$CLAUDE_PROJECT_DIR\" && git diff --quiet origin/main...HEAD -- .claude .github CLAUDE.md ':(exclude).claude/flow/ledgers' 2>/dev/null && git diff --quiet HEAD -- .claude .github CLAUDE.md ':(exclude).claude/flow/ledgers' 2>/dev/null && [ -z \"$(git ls-files --others --exclude-standard -- .claude .github CLAUDE.md ':(exclude).claude/flow/ledgers')\" ]; } || { echo 'Protected files changed. Tell the maintainer.' >&2; exit 2; }; ruby \"$CLAUDE_PROJECT_DIR/.claude/hooks/flow_gate.rb\""
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "ruby \"$CLAUDE_PROJECT_DIR/.claude/hooks/flow_gate.rb\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}

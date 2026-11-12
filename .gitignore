@@ -1,0 +1,2 @@
+# Flow ledgers stay with the session, never in git
+/.claude/flow/ledgers/

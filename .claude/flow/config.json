@@ -1,0 +1,12 @@
+{
+  "protected_branches": ["main", "master"],
+  "never_writable": [
+    ".git", ".git/**/*", ".claude/**/*", "CLAUDE.md", "**/CLAUDE.md",
+    ".github/**/*", ".env*", "config/master.key",
+    "config/credentials/**/*", "config/credentials.yml.enc"
+  ],
+  "denied_commands": ["kamal", "production-console", "docker-entrypoint"],
+  "needs_approve_spec": ["db/migrate/**/*", "docs/architecture/**/*"],
+  "builder_agent": "builder",
+  "reviewer_agent": "reviewer"
+}
