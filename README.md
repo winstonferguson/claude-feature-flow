@@ -1,8 +1,7 @@
 # Feature flow for Claude Code
 
-Left alone, coding agents write PRs too big to review. In the app this
-comes from, this flow took PRs from 1,000+ lines to a few hundred, and more
-features shipped. See it run: [the gate's replies to one feature](examples/hook-run.md).
+Left alone, coding agents write PRs too big to review. With this flow, PRs
+went from 1,000+ lines to a few hundred, and I ship more. See it run: [the gate's replies to one feature](examples/hook-run.md).
 
 A working setup for building features with Claude Code agents. One human
 maintainer, three agent roles, and hooks that keep the agents on the flow.
@@ -60,8 +59,8 @@ file paths don't count towards word limits.
 | What | Limit |
 |---|---|
 | Blocking questions before the draft | 3, interaction first |
-| Acceptance criteria per issue | At most 10: the reviewer refuses an 11th and asks the maintainer which part comes first. From about 6, the issue is over the size budget (next row): simplify it, or split off a part that can ship alone as its own issue |
-| Size budget per PR | About 400 changed lines of app and test code, or 5 acceptance criteria (the soft limit in the row above), whichever comes first |
+| Acceptance criteria per issue | At most 10: the reviewer refuses an 11th and asks the maintainer which part comes first. More than 5 is over the size budget (next row): simplify the issue, or split off a part that can ship alone as its own issue |
+| Size budget per PR | About 400 changed lines of app and test code, or 5 acceptance criteria (row above), whichever comes first |
 | Builder's report | 150 words, at most five "Done" bullets |
 | Reviewer's report | 200 words, at most five findings, a three-line reply to the builder |
 | Other agent summaries | 200 words |
