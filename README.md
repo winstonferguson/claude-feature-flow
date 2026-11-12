@@ -1,5 +1,9 @@
 # Feature flow for Claude Code
 
+Left alone, coding agents write PRs too big to review. In the app this
+comes from, this flow took PRs from 1,000+ lines to a few hundred, and more
+features shipped. See it run: [the gate's replies to one feature](examples/hook-run.md).
+
 A working setup for building features with Claude Code agents. One human
 maintainer, three agent roles, and hooks that keep the agents on the flow.
 It comes from a production Rails app, with the product details removed.
@@ -93,7 +97,16 @@ waiting for a reply.
 ## What the hooks enforce
 
 `.claude/hooks/flow_gate.rb` is wired up in `.claude/settings.json`. It runs in
-cloud sessions and keeps per-branch state in a git-ignored ledger.
+cloud sessions (Claude Code on the web) and keeps per-branch state in a
+git-ignored ledger.
+
+Locally it does nothing. The hook exits at once unless `CLAUDE_CODE_REMOTE`
+is `true`, which Claude Code sets only in cloud sessions, and the
+protected-files check in `settings.json` is skipped too. So a local session
+gets no status line, keeps no ledger, refuses nothing, and treats the typed
+commands as ordinary text. `CLAUDE.md`, the skills and the agents still
+guide Claude, and the `bin/rails db:*` commands that wipe data still ask
+first.
 
 - **No changes without a flow.** File writes are refused until the
   maintainer starts a flow on the branch.
@@ -130,6 +143,40 @@ lists proposed skill changes, and the maintainer decides. That way lessons
 from each feature end up in the skills without an agent rewriting its own
 instructions.
 
+## Use it in your Rails app
+
+1. Copy `.claude/` and `CLAUDE.md` into your app's root, and add this
+   repo's `.gitignore` line. With this repo cloned next to your app, from
+   your app's root:
+
+   ```bash
+   cp -R ../claude-feature-flow/.claude ../claude-feature-flow/CLAUDE.md .
+   ```
+
+   ```bash
+   cat ../claude-feature-flow/.gitignore >> .gitignore
+   ```
+
+   If your app already has a `CLAUDE.md` or `.claude/settings.json`, merge
+   them by hand instead of overwriting.
+2. Edit `.claude/flow/config.json`: your protected branches, the paths
+   agents never write, your deploy commands, and the paths that wait for
+   `approve spec`.
+3. Fit the skills to your app. The `testing` skill names test helpers
+   (`sign_in_as`, `assert_notice`) and CSS frameworks (daisyUI, Tailwind);
+   swap in yours. Add standing instructions under "Maintainer's notes" in
+   `CLAUDE.md`.
+4. Run `ruby .claude/hooks/flow_gate_test.rb`.
+5. Commit and push to `main`. While `.claude/`, `.github/` or `CLAUDE.md`
+   differ from `origin/main`, the hooks block every prompt and every file,
+   shell, agent and GitHub tool call, so the setup has to be on `main`
+   before a session starts.
+6. On GitHub, protect `main` (require a pull request and a review), and
+   create an `ai-agent` label.
+7. Write an issue to the `spec-writing` skill
+   ([example](examples/issue.md)), open a cloud session on the repo, and
+   type `start feature #<issue>`.
+
 ## What's here
 
     CLAUDE.md                       project instructions, flow commands
@@ -142,6 +189,10 @@ instructions.
     .claude/hooks/flow_gate_test.rb
     .claude/flow/config.json        protected paths, branches, denied commands
     .claude/settings.json           hook wiring
+    examples/issue.md               an example issue
+    examples/hook-run.md            the gate's real replies while it is built
+    examples/hook_run.rb            the script that produces hook-run.md
+    LICENSE                         MIT
 
 Run the hook tests (Ruby 3.2+, no gems to install):
 
