@@ -56,8 +56,8 @@ file paths don't count towards word limits.
 | What | Limit |
 |---|---|
 | Blocking questions before the draft | 3, interaction first |
-| Acceptance criteria per issue | At most 10: the reviewer refuses an 11th and asks the maintainer which part comes first. From about 6, review the spec: simplify it, or split off a part that can ship alone as its own issue |
-| Size budget per PR | about 400 changed lines of app and test code, or 5 criteria |
+| Acceptance criteria per issue | At most 10: the reviewer refuses an 11th and asks the maintainer which part comes first. From about 6, the issue is over the size budget (next row): simplify it, or split off a part that can ship alone as its own issue |
+| Size budget per PR | About 400 changed lines of app and test code, or 5 acceptance criteria (the soft limit in the row above), whichever comes first |
 | Builder's report | 150 words, at most five "Done" bullets |
 | Reviewer's report | 200 words, at most five findings, a three-line reply to the builder |
 | Other agent summaries | 200 words |
